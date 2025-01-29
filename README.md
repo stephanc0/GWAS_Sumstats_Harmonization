@@ -24,3 +24,12 @@ zcat ukb-a-61.vcf.gz | head -n 200
 Run the script like this: 
 
 python clean_neale_lab.py shortened_file.vcf.gz --prevalence 0.26
+
+Then then it needs to be lifted over:
+
+bash download.sh
+bash run_liftover.sh shortened_file_cleaned.vcf.gz
+
+Then to move over the new coordinates:
+
+python liftover_neale_lab.py shortened_file_cleaned.vcf.gz shortened_file_cleaned_hg38.bed

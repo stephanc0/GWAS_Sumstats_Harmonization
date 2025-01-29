@@ -13,7 +13,7 @@ def clean_data(input_file, p):
     df = pd.read_csv(input_file, sep='\t')
     assert len(df.FORMAT.unique()) == 1
 
-    df_split = df['UKB-a-61'].str.split(':', expand=True)
+    df_split = df.iloc[:, -1].str.split(':', expand=True)
     df_split.columns = ['beta', 'sebeta', 'mlogp', 'af_alt', 'sample_size', 'id']
     df = pd.concat([df, df_split[['beta', 'sebeta', 'mlogp', 'af_alt', 'sample_size']]], axis=1)
     # print("Unique IDs in 'sample sizes' column:", df['sample_size'].unique())
@@ -37,7 +37,8 @@ def clean_data(input_file, p):
     df['sebeta'] = df['lin_sebeta'] / lin_to_log_conversion
     df.drop(columns=['lin_beta', 'lin_sebeta'], inplace=True)
 
-    final_output_file = f"{os.path.splitext(input_file)[0]}_cleaned.vcf.gz"
+    base_name = os.path.basename(input_file).split('.vcf.gz')[0]
+    final_output_file = f"{base_name}_cleaned.vcf.gz"
     df.to_csv(final_output_file, sep='\t', index=False, compression='gzip')
 
     print(f"Cleaned file saved as: {final_output_file}")
@@ -50,6 +51,7 @@ def main():
     parser.add_argument('--prevalence', type=float, required=True, help="Prevalence of the trait in the population")
 
     args = parser.parse_args()
+
     clean_data(args.input_file, args.prevalence)
 
 if __name__ == "__main__":
