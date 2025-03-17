@@ -8,10 +8,8 @@ def clean_data(input_file, chunksize=3_000_000):
     """
     Cleans FinnGen summary statistics file in chunks while ensuring correct header handling.
     """
-    print(f"Cleaning the file: {input_file}")
-
     # Define output file name
-    base_name = os.path.basename(input_file).replace(".tsv.gz", "")
+    base_name = os.path.basename(input_file).replace(".gz", "")
     output_file = f"{base_name}_cleaned.tsv.gz"
 
     # Extract header line
@@ -38,11 +36,12 @@ def clean_data(input_file, chunksize=3_000_000):
 
         # Create a 'locus' column as 'chr:pos'
         df['locus'] = df['chr'].astype(str) + ':' + df['pos'].astype(str)
+        df.rename(columns={'rsids': 'rsid'}, inplace=True)
 
         # Write chunk to output file (overwrite first chunk, append subsequent ones)
         write_mode = 'wt' if chunk_num == 0 else 'at'
         write_header = chunk_num == 0  # Write header only for the first chunk
-
+        df['rsid'] = df['rsid'].replace("", "rs999999999")  # Replace empty strings
         with gzip.open(output_file, write_mode) as f_out:
             df.to_csv(f_out, sep='\t', index=False, header=write_header)
 

@@ -34,9 +34,11 @@ def process_chunk(df, sample_size):
     df = df[(df['alt'].isin(valid_bases)) & (df['ref'].isin(valid_bases))]
 
     # Rename columns to match LDSC format
-    df = df[['ID', 'alt', 'ref', 'af_alt', 'beta', 'pval', 'N', 'Z']].rename(
-        columns={'ID': 'SNP', 'alt': 'A1', 'ref': 'A2', 'af_alt': 'MAF', 'beta': 'BETA', 'pval': 'P'}
+    df = df[['rsid', 'alt', 'ref', 'af_alt', 'beta', 'pval', 'N', 'Z']].rename(
+        columns={'rsid': 'SNP', 'alt': 'A1', 'ref': 'A2', 'af_alt': 'MAF', 'beta': 'BETA', 'pval': 'P'}
     )
+    # Filter out variants with invalid RSIDS
+    df = df[df['SNP'] != "rs999999999"]
 
     return df
 

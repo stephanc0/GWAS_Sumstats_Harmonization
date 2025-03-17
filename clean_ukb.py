@@ -53,7 +53,7 @@ def clean_data(input_file, p=None, sd=None, comment = b'##', chunksize=3_000_000
             drop_cols.append('sample_size')
         df.drop(columns=[col for col in drop_cols if col in df.columns], inplace=True)
 
-        df.rename(columns={'#CHROM': 'chr', 'POS': 'pos', 'REF': 'ref', 'ALT': 'alt'}, inplace=True)
+        df.rename(columns={'#CHROM': 'chr', 'POS': 'pos', 'REF': 'ref', 'ALT': 'alt', 'ID':'rsid'}, inplace=True)
         df['locus'] = df['chr'].astype(str) + ':' + df['pos'].astype(str)
 
         # Apply logistic conversion if prevalence (p) is provided

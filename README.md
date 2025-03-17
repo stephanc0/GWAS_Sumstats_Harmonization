@@ -1,41 +1,34 @@
-This repository can be used to streamline and liftover summary statistics from various Biobanks.
-
-Finngen summary statistics can be downloaded and processed like this.
-
-Presumeably, this code will work on future Finngen data freezes if the column names are maintained.  View
-column names in wsl terminal with 
+This repository can be used to streamline, liftover, and meta_analyze summary statistics from Finngen, as well as the UK Biobank, 
+curated either by Neale Lab, or by MRC-IEU. These summary statistics can be downloaded, respectively, with commands 
+like this:
 
 wget https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_BMI_IRN.gz
-
-zcat finngen_R12_BMI_IRN.gz | head -n 10
-
-If downloaded using the gsutil link, there will be additional columns, which can be ignored.
-
-IEUopenGWAS contains many GWAS from a variety of biobanks or consortiumns. 
-
-Neale Lab and MRCIEU Summary Statistics can both be downloaded and processed like this:
-
 wget https://gwas.mrcieu.ac.uk/files/ukb-a-61/ukb-a-61.vcf.gz
 
-zcat ukb-a-61.vcf.gz | head -n 200
+Summary Statistics can be streamlined(unnecessary columns removed and important statistics in their own columns) like: 
 
-Run the clean_ukb.py like this: 
-
+python clean_finngen.py finngen_R12_BMI_IRN.gz --sd=.14
 python clean_ukb.py ukb-a-61.vcf.gz --prevalence=0.26
 
-Liftover can be run like this:
+UKBB files use the GRCh37 coordinates, and can be lifted over. First, download the necessary files.  Next, liftover the
+coordinates using a .bed file as required.  Then, convert the coordinates in your summary statistic file.
 
 bash download.sh
 
 bash run_liftover.sh ukb-a-61_cleaned.vcf.gz
-
-Then to move over the new coordinates:
 
 python liftover_ukb.py ukb-a-61_cleaned.vcf.gz ukb-a-61_cleaned_hg38.bed
 
 Cleaned summary statistics files can be premunged for easy munging and analysis by LDSC:
 
 python premunge_cleaned.py ukb-a-61_cleaned_lifted.vcf.gz --sample_size=335000
+
+Cleaned summary statistics files can also be meta-analyzed with eachother, using either locus (chr:pos) or using 
+rsid:
+
+python run_metal.py ukb-b-10215_cleaned_lifted.vcf.gz finngen_R12_BMI_IRN_cleaned.tsv.gz rsid HGSWTMETA
+
+
 
 
 

@@ -39,15 +39,9 @@ def clean_data(input_file, bed_file, chunksize=3_000_000):
         df.rename(columns={'pos': 'pos37'}, inplace=True)
 
         # Map 'pos37' to new 'pos' using 'locus' as the key
-        df['pos'] = df['locus'].map(locus_to_pos38)  # Now mapping to 'pos' instead of 'pos38'
-
-        # Handle missing values by setting unmatched positions to NA
-        df['pos'] = df['pos'].fillna(-1).astype(int)
-        df['pos'] = df['pos'].replace(-1, pd.NA)
-
+        df['pos'] = df['locus'].map(locus_to_pos38).fillna(999999999).astype("Int64")
         # Drop the old 'locus' column
         df.drop(columns=['locus'], inplace=True)
-
         # Create a new 'locus' column with 'chr' and the new 'pos'
         df['locus'] = df['chr'].astype(str) + ':' + df['pos'].astype(str)
 
