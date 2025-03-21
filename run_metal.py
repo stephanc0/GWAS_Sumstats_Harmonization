@@ -42,7 +42,7 @@ def preprocess_file(input_file, marker, chunksize=3_000_000):
 
         elif marker == "locus":
             # Drop rows where `locus` is missing
-            df = df[df['locus'].notna() & ~df['locus'].str.endswith(":999999999")]
+            df.drop(df[~df['locus'].notna() | df['locus'].str.endswith(":999999999")].index, inplace=True)
             df['locus'] = df['locus'].astype(str)  # Ensure it's a string
             df.drop(columns=['rsid', 'pos'], inplace=True, errors='ignore')
 

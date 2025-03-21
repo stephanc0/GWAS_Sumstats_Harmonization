@@ -41,7 +41,7 @@ def clean_data(input_file, chunksize=3_000_000):
         # Write chunk to output file (overwrite first chunk, append subsequent ones)
         write_mode = 'wt' if chunk_num == 0 else 'at'
         write_header = chunk_num == 0  # Write header only for the first chunk
-        df['rsid'] = df['rsid'].replace("", "rs999999999")  # Replace empty strings
+        df['rsid'] = df['rsid'].fillna("rs999999999").replace(["", "."], "rs999999999")
         with gzip.open(output_file, write_mode) as f_out:
             df.to_csv(f_out, sep='\t', index=False, header=write_header)
 

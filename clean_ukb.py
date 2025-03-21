@@ -19,7 +19,14 @@ def clean_data(input_file, p=None, sd=None, comment = b'##', chunksize=3_000_000
             next(fp)
 
         header_line = next(fp).decode().strip().split('\t') # .split('\t')
-        chunk_iterator = pd.read_csv(input_file, sep='\t', chunksize=chunksize)
+        chunk_iterator = pd.read_csv(
+            input_file,
+            sep='\t',
+            chunksize=chunksize,
+            comment='#',
+            header=None,
+            names=header_line
+        )
 
     for chunk_num, df in enumerate(chunk_iterator):
         print(f"Processing chunk {chunk_num+1}...")

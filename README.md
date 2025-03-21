@@ -3,6 +3,7 @@ curated either by Neale Lab, or by MRC-IEU. These summary statistics can be down
 like this:
 
 wget https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_BMI_IRN.gz
+
 wget https://gwas.mrcieu.ac.uk/files/ukb-a-61/ukb-a-61.vcf.gz
 
 Summary Statistics can be streamlined(unnecessary columns removed and important statistics in their own columns) like: 
